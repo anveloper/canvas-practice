@@ -6,18 +6,32 @@ const canvasSize = {
   width: innerWidth,
   height: innerHeight,
 };
+const particles = [];
 
-console.log(dpr);
+function init() {
+  canvasSize.width = innerWidth;
+  canvasSize.height = innerHeight;
 
-canvas.style.backgroundColor = "white";
-canvas.style.width = canvasSize.width + "px";
-canvas.style.height = canvasSize.height + "px";
+  canvas.style.backgroundColor = "white";
+  canvas.style.width = canvasSize.width + "px";
+  canvas.style.height = canvasSize.height + "px";
 
-canvas.width = canvasSize.width * dpr;
-canvas.height = canvasSize.height * dpr;
+  canvas.width = canvasSize.width * dpr;
+  canvas.height = canvasSize.height * dpr;
 
-ctx.scale(dpr, dpr);
+  ctx.scale(dpr, dpr);
 
+  const TOTAL = canvasSize.width / 10;
+
+  for (let i = 0; i < TOTAL; i++) {
+    const x = randomNumBetween(0, canvasSize.width);
+    const y = randomNumBetween(0, canvasSize.height);
+    const radius = randomNumBetween(50, 100);
+    const vy = randomNumBetween(1, 5);
+    const particle = new Particle(x, y, radius, vy);
+    particles.push(particle);
+  }
+}
 const feGaussianBlur = document.querySelector("feGaussianBlur");
 const feColorMatrix = document.querySelector("feColorMatrix");
 const controls = new (function () {
@@ -51,6 +65,7 @@ f2.open();
 gui.add(controls, "acc", 1, 1.5, 0.01).onChange((value) => {
   particles.forEach((particle) => (particle.acc = value));
 });
+
 // ctx.fillRect(10, 10, 50, 50);
 
 // 원형
@@ -83,34 +98,14 @@ class Particle {
   }
 }
 
-const arr = [
-  {
-    x: 100,
-    y: 100,
-    radius: 50,
-  },
-];
-
-const particles = [];
-
-const TOTAL = 20;
 const randomNumBetween = (min, max) => {
   return Math.random() * (max - min + 1) + min;
 };
-for (let i = 0; i < TOTAL; i++) {
-  const x = randomNumBetween(0, canvasSize.width);
-  const y = randomNumBetween(0, canvasSize.height);
-  const radius = randomNumBetween(50, 100);
-  const vy = randomNumBetween(1, 5);
-  const particle = new Particle(x, y, radius, vy);
-  particles.push(particle);
-}
 
 const fps = 60;
 const interval = 1000 / fps; // 60fps
 let now, delta;
 let then = Date.now();
-
 function animate() {
   window.requestAnimationFrame(animate); // 모니터 주사율
   // frame
@@ -133,7 +128,14 @@ function animate() {
   });
 }
 
-animate();
+window.addEventListener("load", () => {
+  init();
+  animate();
+});
+
+window.addEventListener("resize", () => {
+  init();
+});
 /*
   if(delta > interval) {
     animate();

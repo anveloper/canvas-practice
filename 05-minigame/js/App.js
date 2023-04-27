@@ -42,10 +42,21 @@ export default class App {
         background.update();
         background.draw();
       });
-      this.walls.forEach((wall) => {
-        wall.update();
-        wall.draw();
-      });
+
+      for (let i = this.walls.length - 1; i >= 0; i--) {
+        this.walls[i].update();
+        this.walls[i].draw();
+        if (this.walls[i].isOutside) {
+          this.walls.splice(i, 1);
+          continue;
+        }
+        if (this.walls[i].canGenerateNext) {
+          this.walls[i].generatedNext = true;
+          this.walls.push(
+            new Wall({ type: Math.random() > 0.3 ? "SMALL" : "BIG" })
+          );
+        }
+      }
     };
     requestAnimationFrame(frame);
   }

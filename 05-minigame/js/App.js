@@ -1,4 +1,5 @@
 import Background from "./Background.js";
+import Player from "./Player.js";
 import Wall from "./Wall.js";
 
 export default class App {
@@ -15,6 +16,7 @@ export default class App {
       new Background({ img: document.querySelector("#bg1-img"), speed: -4 }),
     ];
     this.walls = [new Wall({ type: "SMALL" })];
+    this.player = new Player();
     window.addEventListener("resize", this.resize.bind(this));
   }
   resize() {
@@ -56,7 +58,15 @@ export default class App {
             new Wall({ type: Math.random() > 0.3 ? "SMALL" : "BIG" })
           );
         }
+        if (this.walls[i].isColliding(this.player.boundingBox)) {
+          this.player.boundingBox.color = `rgba(255, 0, 0, 0.3)`;
+        } else {
+          this.player.boundingBox.color = `rgba(0, 0, 255, 0.3)`;
+        }
       }
+
+      this.player.update();
+      this.player.draw();
     };
     requestAnimationFrame(frame);
   }

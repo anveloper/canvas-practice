@@ -10,9 +10,9 @@ export default class Player {
     this.height = this.width * (96 / 140);
 
     this.boundingBox = new BoundingBox(
-      this.x + 10,
+      this.x + 42,
       this.y + 16,
-      this.width - 14,
+      this.width - 42,
       this.height - 18
     );
 

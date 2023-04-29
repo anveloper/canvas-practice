@@ -1,5 +1,7 @@
 import Background from "./Background.js";
+import Coin from "./Coin.js";
 import Player from "./Player.js";
+import Score from "./Score.js";
 import Wall from "./Wall.js";
 
 export default class App {
@@ -9,6 +11,7 @@ export default class App {
   static interval = 1000 / 60;
   static width = 1024;
   static height = 768;
+
   constructor() {
     this.backgrounds = [
       new Background({ img: document.querySelector("#bg3-img"), speed: -1 }),
@@ -16,7 +19,10 @@ export default class App {
       new Background({ img: document.querySelector("#bg1-img"), speed: -4 }),
     ];
     this.walls = [new Wall({ type: "SMALL" })];
+    this.coins = [];
     this.player = new Player();
+    this.score = new Score();
+
     window.addEventListener("resize", this.resize.bind(this));
   }
   resize() {
@@ -52,12 +58,21 @@ export default class App {
           this.walls.splice(i, 1);
           continue;
         }
+
         if (this.walls[i].canGenerateNext) {
           this.walls[i].generatedNext = true;
-          this.walls.push(
-            new Wall({ type: Math.random() > 0.3 ? "SMALL" : "BIG" })
-          );
+          const newWall = new Wall({
+            type: Math.random() > 0.3 ? "SMALL" : "BIG",
+          });
+          this.walls.push(newWall);
+
+          if (Math.random() < 0.5) {
+            const x = newWall.x + newWall.width / 2;
+            const y = newWall.y2 - newWall.gapY / 2;
+            this.coins.push(new Coin(x, y, newWall.vx));
+          }
         }
+
         if (this.walls[i].isColliding(this.player.boundingBox)) {
           this.player.boundingBox.color = `rgba(255, 0, 0, 0.3)`;
         } else {
@@ -65,8 +80,25 @@ export default class App {
         }
       }
 
+      for (let i = this.coins.length - 1; i >= 0; i--) {
+        this.coins[i].update();
+        this.coins[i].draw();
+        if (this.coins[i].x + this.coins[i].width < 0) {
+          this.coins.splice(i, 1);
+          continue;
+        }
+
+        if (this.coins[i].boundingBox.isColliding(this.player.boundingBox)) {
+          this.coins.splice(i, 1);
+          this.score.coinCount += 1;
+        }
+      }
+
       this.player.update();
       this.player.draw();
+
+      this.score.update();
+      this.score.draw();
     };
     requestAnimationFrame(frame);
   }

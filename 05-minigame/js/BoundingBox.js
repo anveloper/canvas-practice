@@ -17,6 +17,7 @@ export default class BoundingBox {
     );
   }
   draw() {
+    return;
     App.ctx.fillStyle = this.color;
     App.ctx.fillRect(this.x, this.y, this.width, this.height);
   }

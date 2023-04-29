@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"
+  integrity="sha512-cOH8ndwGgPo+K7pTvMrqYbmI8u8k6Sho3js0gOqVWTmQMlLIi6TbqGWRTpf1ga8ci9H3iPsvDLr4X7xwhC/+DQ=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <title>Mini Game</title>
 </head>
 
@@ -19,7 +22,19 @@
   <img src="./assets/wall.png" alt="" id="wall-img" class="asset-img">
   <img src="./assets/bird.png" alt="" id="bird-img" class="asset-img">
   <img src="./assets/coin.png" alt="" id="coin-img" class="asset-img">
-  <canvas></canvas>
+
+  <main>
+    <section class="ready-screen">
+      <img src="./assets/title.png" class="title-img">
+      <img src="./assets/play.svg" class="play-img">
+    </section>
+    <section class="finish-screen">
+      <div class="distance">0m</div>
+      <div class="coin">0 coin</div>
+      <img src="./assets/replay.svg" class="replay-img">
+    </section>
+    <canvas></canvas>
+  </main>
   <script type="module" src="./js/index.js"></script>
 </body>
 

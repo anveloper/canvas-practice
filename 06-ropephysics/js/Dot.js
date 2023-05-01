@@ -4,10 +4,16 @@ export default class Dot {
   constructor(x, y) {
     this.pos = new Vector(x, y);
     this.oldPos = new Vector(x, y);
+
     this.gravity = new Vector(0, 1);
     this.friction = 0.97;
+
+    this.pinned = false;
+
+    this.mass = 1;
   }
   update() {
+    if (this.pinned) return;
     let vel = Vector.sub(this.pos, this.oldPos);
     this.oldPos.setXY(this.pos.x, this.pos.y);
 

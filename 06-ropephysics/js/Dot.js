@@ -1,8 +1,25 @@
+import Vector from "./Vector.js";
+
 export default class Dot {
   constructor(x, y) {
-    this.x = x;
-    this.y = y;
+    this.pos = new Vector(x, y);
+    this.oldPos = new Vector(x, y);
+    this.gravity = new Vector(0, 1);
+    this.friction = 0.97;
   }
-  update() {}
-  draw() {}
+  update() {
+    let vel = Vector.sub(this.pos, this.oldPos);
+    this.oldPos.setXY(this.pos.x, this.pos.y);
+
+    vel.mult(this.friction);
+    vel.add(this.gravity);
+    this.pos.add(vel);
+  }
+  draw(ctx) {
+    ctx.fillStyle = "#000";
+    ctx.beginPath();
+    ctx.arc(this.pos.x, this.pos.y, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.closePath();
+  }
 }

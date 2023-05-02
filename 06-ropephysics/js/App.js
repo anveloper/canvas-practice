@@ -1,4 +1,5 @@
 import Dot from "./Dot.js";
+import Mouse from "./Mouse.js";
 import Stick from "./Stick.js";
 
 export default class App {
@@ -13,15 +14,19 @@ export default class App {
     this.resize();
     window.addEventListener("resize", this.resize.bind(this));
 
+    this.mouse = new Mouse(this.canvas);
+
     this.dots = [
       new Dot(400, 50),
       new Dot(500, 100),
       new Dot(100, 50),
       new Dot(200, 100),
+      new Dot(300, 400),
     ];
     this.sticks = [
       new Stick(this.dots[0], this.dots[1]),
       new Stick(this.dots[2], this.dots[3]),
+      new Stick(this.dots[3], this.dots[4]),
     ];
     this.dots[0].pinned = true;
     this.dots[2].pinned = true;
@@ -50,12 +55,18 @@ export default class App {
       this.ctx.clearRect(0, 0, App.width, App.height);
       //
       this.dots.forEach((dot) => {
-        dot.update();
-        dot.draw(this.ctx);
+        dot.update(this.mouse);
       });
 
       this.sticks.forEach((stick) => {
         stick.update();
+      });
+
+      this.dots.forEach((dot) => {
+        dot.draw(this.ctx);
+      });
+
+      this.sticks.forEach((stick) => {
         stick.draw(this.ctx);
       });
     };

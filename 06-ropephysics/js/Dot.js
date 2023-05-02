@@ -12,7 +12,7 @@ export default class Dot {
 
     this.mass = 1;
   }
-  update() {
+  update(mouse) {
     if (this.pinned) return;
     let vel = Vector.sub(this.pos, this.oldPos);
     this.oldPos.setXY(this.pos.x, this.pos.y);
@@ -20,6 +20,15 @@ export default class Dot {
     vel.mult(this.friction);
     vel.add(this.gravity);
     this.pos.add(vel);
+
+    let { x: dx, y: dy } = Vector.sub(mouse.pos, this.pos);
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist > mouse.radius) return;
+    const direction = new Vector(dx / dist, dy / dist);
+    const force = (mouse.radius - dist) / mouse.radius;
+    if (force > 0.8) this.pos.setXY(mouse.pos.x, mouse.pos.y);
+    else this.pos.add(direction.mult(force).mult(5));
   }
   draw(ctx) {
     ctx.fillStyle = "#000";
